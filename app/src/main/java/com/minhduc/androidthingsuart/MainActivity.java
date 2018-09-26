@@ -33,9 +33,9 @@ public class MainActivity extends Activity {
 
     private UartDevice uartDevice;
 
-    private static ExerciseOne ex1;
-    private static ExerciseTwo ex2;
-    private static ExerciseThree ex3;
+    private static ExerciseOne ex1 = new ExerciseOne();
+    private static ExerciseTwo ex2 = new ExerciseTwo();
+    private static ExerciseThree ex3 = new ExerciseThree();
 
     private Runnable mTransferUartRunnable = new Runnable() {
         @Override
@@ -159,9 +159,9 @@ public class MainActivity extends Activity {
             Log.d(TAG, "Read " + count + " bytes from peripheral");
             int key = (int) buffer[0];
             char c = Character.toUpperCase((char) key); //Comment to remove auto upper case
-            ex1 = new ExerciseOne();
-            ex2 = new ExerciseTwo();
-            ex3 = new ExerciseThree();
+//            ex1 = new ExerciseOne();
+//            ex2 = new ExerciseTwo();
+//            ex3 = new ExerciseThree();
             if(state == 0){
                 if(c == 'O') {
                     uartDevice.write(sendComfirm.getBytes(), sendComfirm.length());

@@ -62,6 +62,7 @@ public class ExerciseOne{
         @Override
         public void run() {
             if (mLedGpioBlue == null || mLedGpioGreen == null || mLedGpioRed == null) {
+                Log.w(TAG, "Stopping runnable since Gpio is null");
                 return;
             }
             try {

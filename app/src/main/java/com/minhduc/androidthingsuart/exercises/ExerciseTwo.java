@@ -29,6 +29,40 @@ public class ExerciseTwo {
     private int ledState;
     private int buttonState;
 
+    public void onCreate(){
+        try {
+            PeripheralManager manager = PeripheralManager.getInstance();
+            mLedGpioRed = manager.openGpio(GPIO2);
+            mLedGpioGreen = manager.openGpio(GPIO3);
+            mLedGpioBlue = manager.openGpio(GPIO4);
+            mButtonGpio = manager.openGpio(GPIO20);
+
+            // Define in/out ports
+            mLedGpioRed.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
+            mLedGpioGreen.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
+            mLedGpioBlue.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
+            mButtonGpio.setDirection(Gpio.DIRECTION_IN);
+            mButtonGpio.setEdgeTriggerType(Gpio.EDGE_FALLING);
+
+            // Assign init states
+            mLedGpioRed.setActiveType(Gpio.ACTIVE_LOW);
+            mLedGpioGreen.setActiveType(Gpio.ACTIVE_LOW);
+            mLedGpioBlue.setActiveType(Gpio.ACTIVE_LOW);
+            mButtonGpio.setActiveType(Gpio.ACTIVE_HIGH);
+
+            // Init first state
+            ledState = 1;
+            buttonState = 1;
+
+            // Post handle
+            mHandler.post(mBlinkRunnable);
+            mButtonGpio.registerGpioCallback(mGpioCallback);
+
+        } catch (IOException e) {
+            Log.e(TAG, "Error on PeripheralIO API", e);
+        }
+
+    }
 
     private Runnable mBlinkRunnable = new Runnable() {
         @Override
@@ -116,41 +150,6 @@ public class ExerciseTwo {
             return true;
         }
     };
-
-    public void onCreate(){
-        try {
-            PeripheralManager manager = PeripheralManager.getInstance();
-            mLedGpioRed = manager.openGpio(GPIO2);
-            mLedGpioGreen = manager.openGpio(GPIO3);
-            mLedGpioBlue = manager.openGpio(GPIO4);
-            mButtonGpio = manager.openGpio(GPIO20);
-
-            // Define in/out ports
-            mLedGpioRed.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
-            mLedGpioGreen.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
-            mLedGpioBlue.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
-            mButtonGpio.setDirection(Gpio.DIRECTION_IN);
-            mButtonGpio.setEdgeTriggerType(Gpio.EDGE_FALLING);
-
-            // Assign init states
-            mLedGpioRed.setActiveType(Gpio.ACTIVE_LOW);
-            mLedGpioGreen.setActiveType(Gpio.ACTIVE_LOW);
-            mLedGpioBlue.setActiveType(Gpio.ACTIVE_LOW);
-            mButtonGpio.setActiveType(Gpio.ACTIVE_HIGH);
-
-            // Init first state
-            ledState = 1;
-            buttonState = 1;
-
-            // Post handle
-            mHandler.post(mBlinkRunnable);
-            mButtonGpio.registerGpioCallback(mGpioCallback);
-
-        } catch (IOException e) {
-            Log.e(TAG, "Error on PeripheralIO API", e);
-        }
-
-    }
 
 
     public void onDestroy() {

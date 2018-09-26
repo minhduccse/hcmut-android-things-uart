@@ -30,6 +30,7 @@ public class ExerciseTwo {
     private int buttonState;
 
     public void onCreate(){
+        Log.i(TAG, "Starting BlinkActivity Button & LED");
         try {
             PeripheralManager manager = PeripheralManager.getInstance();
             mLedGpioRed = manager.openGpio(GPIO2);

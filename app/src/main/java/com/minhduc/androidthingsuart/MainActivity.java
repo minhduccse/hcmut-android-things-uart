@@ -159,12 +159,10 @@ public class MainActivity extends Activity {
             Log.d(TAG, "Read " + count + " bytes from peripheral");
             int key = (int) buffer[0];
             char c = Character.toUpperCase((char) key); //Comment to remove auto upper case
-//            ex1 = new ExerciseOne();
-//            ex2 = new ExerciseTwo();
-//            ex3 = new ExerciseThree();
             if(state == 0){
                 if(c == 'O') {
                     uartDevice.write(sendComfirm.getBytes(), sendComfirm.length());
+                    Log.d(TAG, "App starts ready to recieve commands");
                     state = 1;
                 }
             }
@@ -186,6 +184,7 @@ public class MainActivity extends Activity {
                         ex2.onDestroy();
                         ex3.onDestroy();
                         state = 0;
+                        Log.d(TAG, "App stops any running");
                         break;
                     default:
                         break;

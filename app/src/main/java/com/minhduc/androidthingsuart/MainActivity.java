@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
         byte[] buffer = new byte[CHUNK_SIZE];
         int count;
         while ((count = uart.read(buffer, buffer.length)) > 0) {
-            Log.d(TAG, "Read " + count + " bytes from peripheral");
+            //Log.d(TAG, "Read " + count + " bytes from peripheral");
             int key = (int) buffer[0];
             char c = Character.toUpperCase((char) key); //Comment to remove auto upper case
             if(state == 0){

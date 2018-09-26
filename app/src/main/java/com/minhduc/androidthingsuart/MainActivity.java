@@ -147,7 +147,24 @@ public class MainActivity extends Activity {
         int count;
         while ((count = uart.read(buffer, buffer.length)) > 0) {
             Log.d(TAG, "Read " + count + " bytes from peripheral");
-
+            int key = (int) buffer[0];
+            char c = Character.toUpperCase((char) key); //Comment to remove auto upper case
+            switch (c) {
+                case 'O':
+                    break;
+                case '1':
+                    break;
+                case '2':
+                    break;
+                case '3':
+                    break;
+                case '4':
+                    break;
+                case 'F':
+                    break;
+                default:
+                    break;
+            }
             //Implement state machine
             uartDevice.write(buffer, count);
         }

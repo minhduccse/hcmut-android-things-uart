@@ -13,6 +13,10 @@ import com.google.android.things.pio.UartDeviceCallback;
 import java.io.IOException;
 
 public class MainActivity extends Activity {
+    private int state = 0;
+    String sendComfirm = "App starts ready to receive commands !!!";
+
+
     private static final String TAG = "UART";
 
     // UART Configuration Parameters
@@ -149,23 +153,27 @@ public class MainActivity extends Activity {
             Log.d(TAG, "Read " + count + " bytes from peripheral");
             int key = (int) buffer[0];
             char c = Character.toUpperCase((char) key); //Comment to remove auto upper case
-            switch (c) {
-                case 'O':
-                    break;
-                case '1':
-                    break;
-                case '2':
-                    break;
-                case '3':
-                    break;
-                case '4':
-                    break;
-                case 'F':
-                    break;
-                default:
-                    break;
+            if(state == 0){
+                uartDevice.write(sendComfirm.getBytes(), sendComfirm.length());
+                state = 1;
             }
-            //Implement state machine
+            else if(state == 1){
+                switch (c) {
+                    case '1':
+                        break;
+                    case '2':
+                        break;
+                    case '3':
+                        break;
+                    case '4':
+                        break;
+                    case 'F':
+                        state = 0;
+                        break;
+                    default:
+                        break;
+                }
+            }
             uartDevice.write(buffer, count);
         }
 

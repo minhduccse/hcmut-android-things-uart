@@ -3,7 +3,6 @@ package com.minhduc.androidthingsuart;
 import com.minhduc.androidthingsuart.exercises.*;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -158,6 +157,7 @@ public class MainActivity extends Activity {
             char c = Character.toUpperCase((char) key); //Comment to remove auto upper case
             ExerciseOne ex1 = new ExerciseOne();
             ExerciseTwo ex2 = new ExerciseTwo();
+            ExerciseThree ex3 = new ExerciseThree();
             if(state == 0){
                 if(c == 'O') {
                     uartDevice.write(sendComfirm.getBytes(), sendComfirm.length());
@@ -173,12 +173,15 @@ public class MainActivity extends Activity {
                         ex2.onCreate();
                         break;
                     case '3':
+                        ex3.onCreate();
                         break;
                     case '4':
                         break;
                     case 'F':
                         ex1.onDestroy();
                         ex2.onDestroy();
+                        ex3.onDestroy();
+                        Thread.currentThread().interrupt();
                         state = 0;
                         break;
                     default:

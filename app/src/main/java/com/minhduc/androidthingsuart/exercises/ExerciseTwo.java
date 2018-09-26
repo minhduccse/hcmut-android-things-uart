@@ -1,7 +1,5 @@
 package com.minhduc.androidthingsuart.exercises;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
@@ -11,11 +9,11 @@ import com.google.android.things.pio.PeripheralManager;
 
 import java.io.IOException;
 
-public class ExerciseTwo extends Activity {
+public class ExerciseTwo {
     private static final String TAG = "LED & Button";
-    private String GPIO2 = "BCM2";
-    private String GPIO3 = "BCM3";
-    private String GPIO4 = "BCM4";
+    private String GPIO2 = "BCM17";
+    private String GPIO3 = "BCM27";
+    private String GPIO4 = "BCM22";
     private String GPIO20 = "BCM20";
 
 
@@ -31,42 +29,46 @@ public class ExerciseTwo extends Activity {
     private int ledState;
     private int buttonState;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        try {
-            PeripheralManager manager = PeripheralManager.getInstance();
-            mLedGpioRed = manager.openGpio(GPIO2);
-            mLedGpioGreen = manager.openGpio(GPIO3);
-            mLedGpioBlue = manager.openGpio(GPIO4);
-            mButtonGpio = manager.openGpio(GPIO20);
 
-            // Define in/out ports
-            mLedGpioRed.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
-            mLedGpioGreen.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
-            mLedGpioBlue.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
-            mButtonGpio.setDirection(Gpio.DIRECTION_IN);
-            mButtonGpio.setEdgeTriggerType(Gpio.EDGE_FALLING);
+    private Runnable mBlinkRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mLedGpioBlue == null || mLedGpioGreen == null || mLedGpioRed == null) {
+                return;
+            }
+            try {
+                // Toggle between states
+                switch (ledState) {
+                    case 1:
+                        mLedGpioRed.setValue(true);
+                        mLedGpioGreen.setValue(false);
+                        mLedGpioBlue.setValue(false);
+                        ledState = 2;
+                        break;
+                    case 2:
+                        mLedGpioRed.setValue(false);
+                        mLedGpioGreen.setValue(true);
+                        mLedGpioBlue.setValue(false);
+                        ledState = 3;
+                        break;
+                    case 3:
+                        mLedGpioRed.setValue(false);
+                        mLedGpioGreen.setValue(false);
+                        mLedGpioBlue.setValue(true);
+                        ledState = 1;
+                        break;
+                    default:
+                        break;
+                }
 
-            // Assign init states
-            mLedGpioRed.setActiveType(Gpio.ACTIVE_LOW);
-            mLedGpioGreen.setActiveType(Gpio.ACTIVE_LOW);
-            mLedGpioBlue.setActiveType(Gpio.ACTIVE_LOW);
-            mButtonGpio.setActiveType(Gpio.ACTIVE_HIGH);
+                // Reschedule runnable INTERVAL_BETWEEN_BLINKS_MS
+                mHandler.postDelayed(mBlinkRunnable, INTERVAL_BETWEEN_BLINKS_MS);
 
-            // Init first state
-            ledState = 1;
-            buttonState = 1;
-
-            // Post handle
-            mHandler.post(mBlinkRunnable);
-            mButtonGpio.registerGpioCallback(mGpioCallback);
-
-        } catch (IOException e) {
-            Log.e(TAG, "Error on PeripheralIO API", e);
+            } catch (IOException e) {
+                Log.e(TAG, "Error on PeripheralIO API", e);
+            }
         }
-
-    }
+    };
 
     private GpioCallback mGpioCallback = new GpioCallback() {
         @Override
@@ -114,54 +116,48 @@ public class ExerciseTwo extends Activity {
         }
     };
 
-    private Runnable mBlinkRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (mLedGpioBlue == null || mLedGpioGreen == null || mLedGpioRed == null) {
-                return;
-            }
-            try {
-                // Toggle between states
-                switch (ledState) {
-                    case 1:
-                        mLedGpioRed.setValue(true);
-                        mLedGpioGreen.setValue(false);
-                        mLedGpioBlue.setValue(false);
-                        ledState = 2;
-                        break;
-                    case 2:
-                        mLedGpioRed.setValue(false);
-                        mLedGpioGreen.setValue(true);
-                        mLedGpioBlue.setValue(false);
-                        ledState = 3;
-                        break;
-                    case 3:
-                        mLedGpioRed.setValue(false);
-                        mLedGpioGreen.setValue(false);
-                        mLedGpioBlue.setValue(true);
-                        ledState = 1;
-                        break;
-                    default:
-                        break;
-                }
+    public void onCreate(){
+        try {
+            PeripheralManager manager = PeripheralManager.getInstance();
+            mLedGpioRed = manager.openGpio(GPIO2);
+            mLedGpioGreen = manager.openGpio(GPIO3);
+            mLedGpioBlue = manager.openGpio(GPIO4);
+            mButtonGpio = manager.openGpio(GPIO20);
 
-                // Reschedule runnable INTERVAL_BETWEEN_BLINKS_MS
-                mHandler.postDelayed(mBlinkRunnable, INTERVAL_BETWEEN_BLINKS_MS);
+            // Define in/out ports
+            mLedGpioRed.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
+            mLedGpioGreen.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
+            mLedGpioBlue.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
+            mButtonGpio.setDirection(Gpio.DIRECTION_IN);
+            mButtonGpio.setEdgeTriggerType(Gpio.EDGE_FALLING);
 
-            } catch (IOException e) {
-                Log.e(TAG, "Error on PeripheralIO API", e);
-            }
+            // Assign init states
+            mLedGpioRed.setActiveType(Gpio.ACTIVE_LOW);
+            mLedGpioGreen.setActiveType(Gpio.ACTIVE_LOW);
+            mLedGpioBlue.setActiveType(Gpio.ACTIVE_LOW);
+            mButtonGpio.setActiveType(Gpio.ACTIVE_HIGH);
+
+            // Init first state
+            ledState = 1;
+            buttonState = 1;
+
+            // Post handle
+            mHandler.post(mBlinkRunnable);
+            mButtonGpio.registerGpioCallback(mGpioCallback);
+
+        } catch (IOException e) {
+            Log.e(TAG, "Error on PeripheralIO API", e);
         }
-    };
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    }
+
+
+    public void onDestroy() {
         // Remove pending blink Runnable
         mHandler.removeCallbacks(mBlinkRunnable);
         // Close the Gpio pin.
         Log.i(TAG, "Close LED GPIO");
-        try {
+        if(mLedGpioRed != null && mLedGpioBlue != null && mLedGpioGreen != null && mButtonGpio != null) try {
             mLedGpioGreen.close();
             mLedGpioBlue.close();
             mLedGpioRed.close();

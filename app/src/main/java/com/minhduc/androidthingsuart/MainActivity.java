@@ -156,24 +156,29 @@ public class MainActivity extends Activity {
             Log.d(TAG, "Read " + count + " bytes from peripheral");
             int key = (int) buffer[0];
             char c = Character.toUpperCase((char) key); //Comment to remove auto upper case
+            ExerciseOne ex1 = new ExerciseOne();
+            ExerciseTwo ex2 = new ExerciseTwo();
             if(state == 0){
-                uartDevice.write(sendComfirm.getBytes(), sendComfirm.length());
-                if(c == 'O') state = 1;
+                if(c == 'O') {
+                    uartDevice.write(sendComfirm.getBytes(), sendComfirm.length());
+                    state = 1;
+                }
             }
             else if(state == 1){
                 switch (c) {
                     case '1':
-                        ex1Create();
+                        ex1.onCreate();
                         break;
                     case '2':
-                        ex2Create();
+                        ex2.onCreate();
                         break;
                     case '3':
                         break;
                     case '4':
                         break;
                     case 'F':
-                        finish();
+                        ex1.onDestroy();
+                        ex2.onDestroy();
                         state = 0;
                         break;
                     default:
@@ -183,15 +188,5 @@ public class MainActivity extends Activity {
             uartDevice.write(buffer, count);
         }
 
-    }
-
-    public void ex1Create() {
-        Intent intent = new Intent(this, ExerciseOne.class);
-        startActivity(intent);
-    }
-
-    public void ex2Create() {
-        Intent intent = new Intent(this, ExerciseOne.class);
-        startActivity(intent);
     }
 }

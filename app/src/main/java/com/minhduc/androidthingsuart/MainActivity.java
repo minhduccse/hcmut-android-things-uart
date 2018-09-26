@@ -32,7 +32,7 @@ import java.io.IOException;
  * @see <a href="https://github.com/androidthings/contrib-drivers#readme">https://github.com/androidthings/contrib-drivers#readme</a>
  */
 public class MainActivity extends Activity {
-    private static final String TAG = "LoopbackActivity";
+    private static final String TAG = "UART";
 
     // UART Configuration Parameters
     private static final int BAUD_RATE = 115200;
@@ -66,6 +66,9 @@ public class MainActivity extends Activity {
         // Attempt to access the UART device
         try {
             openUart(BoardDefaults.getUartName(), BAUD_RATE);
+            String sendHello = "Android Things Hello from UART";
+            mLoopbackDevice.write(sendHello.getBytes(), sendHello.length());
+            Log.d(TAG, "Opened UART device");
             // Read any initially buffered data
             mInputHandler.post(mTransferUartRunnable);
         } catch (IOException e) {

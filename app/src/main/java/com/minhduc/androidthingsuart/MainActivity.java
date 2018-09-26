@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
     private HandlerThread mInputThread;
     private Handler mInputHandler;
 
-    private UartDevice mLoopbackDevice;
+    private UartDevice uartDevice;
 
     private Runnable mTransferUartRunnable = new Runnable() {
         @Override
@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
         try {
             openUart(BoardDefaults.getUartName(), BAUD_RATE);
             String sendHello = "Android Things Hello from UART";
-            mLoopbackDevice.write(sendHello.getBytes(), sendHello.length());
+            uartDevice.write(sendHello.getBytes(), sendHello.length());
             Log.d(TAG, "Opened UART device");
             // Read any initially buffered data
             mInputHandler.post(mTransferUartRunnable);
@@ -100,9 +100,11 @@ public class MainActivity extends Activity {
     private UartDeviceCallback mCallback = new UartDeviceCallback() {
         @Override
         public boolean onUartDeviceDataAvailable(UartDevice uart) {
-            // Queue up a data transfer
-            transferUartData();
-            //Continue listening for more interrupts
+            try {
+                readUartBuffer(uart);
+            } catch (IOException e) {
+                Log.w(TAG, "Unable to access UART device", e);
+            }
             return true;
         }
 
@@ -124,26 +126,26 @@ public class MainActivity extends Activity {
      * @throws IOException if an error occurs opening the UART port.
      */
     private void openUart(String name, int baudRate) throws IOException {
-        mLoopbackDevice = PeripheralManager.getInstance().openUartDevice(name);
+        uartDevice = PeripheralManager.getInstance().openUartDevice(name);
         // Configure the UART
-        mLoopbackDevice.setBaudrate(baudRate);
-        mLoopbackDevice.setDataSize(DATA_BITS);
-        mLoopbackDevice.setParity(UartDevice.PARITY_NONE);
-        mLoopbackDevice.setStopBits(STOP_BITS);
+        uartDevice.setBaudrate(baudRate);
+        uartDevice.setDataSize(DATA_BITS);
+        uartDevice.setParity(UartDevice.PARITY_NONE);
+        uartDevice.setStopBits(STOP_BITS);
 
-        mLoopbackDevice.registerUartDeviceCallback(mInputHandler, mCallback);
+        uartDevice.registerUartDeviceCallback(mInputHandler, mCallback);
     }
 
     /**
      * Close the UART device connection, if it exists
      */
     private void closeUart() throws IOException {
-        if (mLoopbackDevice != null) {
-            mLoopbackDevice.unregisterUartDeviceCallback(mCallback);
+        if (uartDevice != null) {
+            uartDevice.unregisterUartDeviceCallback(mCallback);
             try {
-                mLoopbackDevice.close();
+                uartDevice.close();
             } finally {
-                mLoopbackDevice = null;
+                uartDevice = null;
             }
         }
     }
@@ -155,17 +157,30 @@ public class MainActivity extends Activity {
      * Potentially long-running operation. Call from a worker thread.
      */
     private void transferUartData() {
-        if (mLoopbackDevice != null) {
+        if (uartDevice != null) {
             // Loop until there is no more data in the RX buffer.
             try {
                 byte[] buffer = new byte[CHUNK_SIZE];
                 int read;
-                while ((read = mLoopbackDevice.read(buffer, buffer.length)) > 0) {
-                    mLoopbackDevice.write(buffer, read);
+                while ((read = uartDevice.read(buffer, buffer.length)) > 0) {
+                    uartDevice.write(buffer, read);
                 }
             } catch (IOException e) {
                 Log.w(TAG, "Unable to transfer data over UART", e);
             }
         }
+    }
+
+    public void readUartBuffer(UartDevice uart) throws IOException {
+        // Maximum amount of data to read at one time
+        byte[] buffer = new byte[CHUNK_SIZE];
+        int count;
+        while ((count = uart.read(buffer, buffer.length)) > 0) {
+            Log.d(TAG, "Read " + count + " bytes from peripheral");
+
+            //Implement state machine
+            uartDevice.write(buffer, count);
+        }
+
     }
 }

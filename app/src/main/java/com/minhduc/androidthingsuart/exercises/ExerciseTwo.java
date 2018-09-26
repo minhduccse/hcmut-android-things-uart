@@ -115,27 +115,27 @@ public class ExerciseTwo {
                         if (!button.getValue()) {
                             INTERVAL_BETWEEN_BLINKS_MS = 2000;
                             buttonState = 2;
-                            Log.i(TAG, "Button State 1"); //For debug
+                            //Log.i(TAG, "Button State 1"); //For debug
                         }
                         break;
                     case 2:
                         if (!button.getValue()) {
                             INTERVAL_BETWEEN_BLINKS_MS = 1000;
-                            Log.i(TAG, "Button State 2"); //For debug
+                            //Log.i(TAG, "Button State 2"); //For debug
                             buttonState = 3;
                         }
                         break;
                     case 3:
                         if (!button.getValue()) {
                             INTERVAL_BETWEEN_BLINKS_MS = 500;
-                            Log.i(TAG, "Button State 3"); //For debug
+                            //Log.i(TAG, "Button State 3"); //For debug
                             buttonState = 4;
                         }
                         break;
                     case 4:
                         if (!button.getValue()) {
                             INTERVAL_BETWEEN_BLINKS_MS = 100;
-                            Log.i(TAG, "Button State 4"); //For debug
+                            //Log.i(TAG, "Button State 4"); //For debug
                             buttonState = 1;
                         }
                         break;

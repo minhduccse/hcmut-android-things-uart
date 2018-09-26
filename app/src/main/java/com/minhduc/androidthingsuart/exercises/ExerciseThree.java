@@ -27,7 +27,7 @@ public class ExerciseThree {
     private Pwm mPwm1;
 
     public void onCreate() {
-        Log.i(TAG, "Starting Activity");
+        Log.i(TAG, "Starting Changing PWM");
 
         try {
             PeripheralManager manager = PeripheralManager.getInstance();

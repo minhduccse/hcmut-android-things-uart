@@ -81,7 +81,6 @@ public class ExerciseThree {
 
     public void onDestroy() {
         mHandler.removeCallbacks(changePWMRunnable);
-        mHandler.removeMessages(0);
 
         Log.i(TAG, "Closing PWM pin");
         if (mPwm0 != null || mPwm1 != null) {

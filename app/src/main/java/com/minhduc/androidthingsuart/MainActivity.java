@@ -36,6 +36,8 @@ public class MainActivity extends Activity {
     private static ExerciseOne ex1 = new ExerciseOne();
     private static ExerciseTwo ex2 = new ExerciseTwo();
     private static ExerciseThree ex3 = new ExerciseThree();
+    private static ExerciseFour ex4 = new ExerciseFour();
+    private static ExerciseFive ex5 = new ExerciseFive();
 
     private Runnable mTransferUartRunnable = new Runnable() {
         @Override
@@ -169,20 +171,37 @@ public class MainActivity extends Activity {
             else if(state == 1){
                 switch (c) {
                     case '1':
+                        ex1.onDestroy();
+                        ex4.onDestroy();
+                        ex5.onDestroy();
                         ex1.onCreate();
                         break;
                     case '2':
+                        ex2.onDestroy();
                         ex2.onCreate();
                         break;
                     case '3':
+                        ex3.onDestroy();
                         ex3.onCreate();
                         break;
                     case '4':
+                        ex1.onDestroy();
+                        ex4.onDestroy();
+                        ex5.onDestroy();
+                        ex4.onCreate();
+                        break;
+                    case '5':
+                        ex1.onDestroy();
+                        ex4.onDestroy();
+                        ex5.onDestroy();
+                        ex5.onCreate();
                         break;
                     case 'F':
                         ex1.onDestroy();
                         ex2.onDestroy();
                         ex3.onDestroy();
+                        ex4.onDestroy();
+                        ex5.onDestroy();
                         state = 0;
                         Log.d(TAG, "App stops any running");
                         break;

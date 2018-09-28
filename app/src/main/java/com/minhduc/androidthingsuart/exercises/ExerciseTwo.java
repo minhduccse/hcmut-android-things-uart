@@ -156,6 +156,7 @@ public class ExerciseTwo {
     public void onDestroy() {
         // Remove pending blink Runnable
         mHandler.removeCallbacks(mBlinkRunnable);
+        mButtonGpio.unregisterGpioCallback(mGpioCallback);
         // Close the Gpio pin.
         Log.i(TAG, "Close LED GPIO");
         if(mLedGpioRed != null && mLedGpioBlue != null && mLedGpioGreen != null && mButtonGpio != null) try {

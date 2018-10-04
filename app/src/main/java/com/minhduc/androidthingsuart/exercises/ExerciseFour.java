@@ -13,7 +13,7 @@ import com.leinardi.android.things.pio.SoftPwm;
 import java.io.IOException;
 
 public class ExerciseFour {
-    private static final String TAG = "Brightness Change";
+    private static final String TAG = "EX4";
     private String GPIO2 = "BCM2";
     private String GPIO3 = "BCM3";
     private String GPIO4 = "BCM4";
@@ -182,24 +182,27 @@ public class ExerciseFour {
         mHandler.removeCallbacks(changePWMRunnable);
 
         Log.i(TAG, "Closing PWM pin");
-        if (mPwmRed != null || mPwmGreen != null || mPwmBlue != null) {
-            try {
-                mPwmRed.close();
-                mPwmGreen.close();
-                mPwmBlue.close();
-                mButtonGpio.close();
-
-                mPwmRed = null;
-                mPwmGreen = null;
-                mPwmBlue = null;
-                mButtonGpio = null;
-            } catch (IOException e) {
-                Log.w(TAG, "Unable to close PWM", e);
-            }
+        if (mPwmRed != null || mPwmGreen != null || mPwmBlue != null) try {
+            mPwmRed.close();
+            mPwmGreen.close();
+            mPwmBlue.close();
+        } catch (IOException e) {
+            Log.w(TAG, "Unable to close PWM", e);
+        } finally {
+            mPwmRed = null;
+            mPwmGreen = null;
+            mPwmBlue = null;
         }
-    }
+        if(mButtonGpio != null) try {
+            mButtonGpio.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Error on Button IO", e);
+        } finally {
+            mButtonGpio = null;
+        }
+        }
 
-    public void initializePwm(Pwm pwm) throws IOException {
+    private void initializePwm(Pwm pwm) throws IOException {
         pwm.setPwmFrequencyHz(240);
         pwm.setPwmDutyCycle(25);
 

@@ -11,7 +11,7 @@ import java.io.IOException;
 
 
 public class ExerciseFive {
-    private static final String TAG = "Blink LED";
+    private static final String TAG = "EX5";
     private String RED = "BCM2";
     private String GREEN = "BCM3";
     private String BLUE = "BCM4";
@@ -129,7 +129,7 @@ public class ExerciseFive {
         // Remove pending blink Runnable
         mHandler.removeCallbacks(mBlinkRunnable);
         Log.i(TAG, "Closing LED GPIO pin");
-        if(mLedGpioRed != null && mLedGpioBlue != null && mLedGpioGreen != null) try {
+        if(mLedGpioRed != null || mLedGpioBlue != null || mLedGpioGreen != null) try {
             mLedGpioGreen.close();
             mLedGpioBlue.close();
             mLedGpioRed.close();

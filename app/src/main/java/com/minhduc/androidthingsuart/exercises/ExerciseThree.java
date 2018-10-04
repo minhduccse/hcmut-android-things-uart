@@ -9,7 +9,7 @@ import com.google.android.things.pio.Pwm;
 import java.io.IOException;
 
 public class ExerciseThree {
-    private static final String TAG = "Brightness Change";
+    private static final String TAG = "EX3";
     private Handler mHandler = new Handler();
 
     // PWM PIN
@@ -88,11 +88,11 @@ public class ExerciseThree {
                 mPwm0.close();
                 mPwm1.close();
 
-                mPwm0 = null;
-                mPwm1 = null;
-
             } catch (IOException e) {
                 Log.w(TAG, "Unable to close PWM", e);
+            } finally {
+                mPwm0 = null;
+                mPwm1 = null;
             }
         }
     }

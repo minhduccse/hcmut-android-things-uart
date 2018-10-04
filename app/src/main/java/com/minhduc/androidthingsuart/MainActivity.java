@@ -171,32 +171,52 @@ public class MainActivity extends Activity {
             else if(state == 1){
                 switch (c) {
                     case '1':
+                        Log.d(TAG, "Case 1");
                         ex1.onDestroy();
+                        ex2.onDestroy();
+                        ex3.onDestroy();
                         ex4.onDestroy();
                         ex5.onDestroy();
                         ex1.onCreate();
                         break;
                     case '2':
+                        Log.d(TAG, "Case 2");
+                        ex1.onDestroy();
                         ex2.onDestroy();
+                        ex3.onDestroy();
+                        ex4.onDestroy();
+                        ex5.onDestroy();
                         ex2.onCreate();
                         break;
                     case '3':
+                        Log.d(TAG, "Case 3");
+                        ex1.onDestroy();
+                        ex2.onDestroy();
                         ex3.onDestroy();
+                        ex4.onDestroy();
+                        ex5.onDestroy();
                         ex3.onCreate();
                         break;
                     case '4':
+                        Log.d(TAG, "Case 4");
                         ex1.onDestroy();
+                        ex2.onDestroy();
+                        ex3.onDestroy();
                         ex4.onDestroy();
                         ex5.onDestroy();
                         ex4.onCreate();
                         break;
                     case '5':
+                        Log.d(TAG, "Case 5");
                         ex1.onDestroy();
+                        ex2.onDestroy();
+                        ex3.onDestroy();
                         ex4.onDestroy();
                         ex5.onDestroy();
                         ex5.onCreate();
                         break;
                     case 'F':
+                        Log.d(TAG, "Case F");
                         ex1.onDestroy();
                         ex2.onDestroy();
                         ex3.onDestroy();

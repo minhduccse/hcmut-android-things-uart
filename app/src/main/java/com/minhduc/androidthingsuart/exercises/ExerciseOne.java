@@ -10,7 +10,7 @@ import java.io.IOException;
 
 
 public class ExerciseOne{
-    private static final String TAG = "RGB LED";
+    private static final String TAG = "EX1";
     private String GPIO2 = "BCM2";
     private String GPIO3 = "BCM3";
     private String GPIO4 = "BCM4";
@@ -19,9 +19,9 @@ public class ExerciseOne{
 
     private Handler mHandler = new Handler();
 
-    private Gpio mLedGpioGreen;
-    private Gpio mLedGpioRed;
-    private Gpio mLedGpioBlue;
+    private Gpio mLedGpioGreen1;
+    private Gpio mLedGpioRed1;
+    private Gpio mLedGpioBlue1;
 
     private int state;
 
@@ -32,19 +32,19 @@ public class ExerciseOne{
         try {
             // Declare GPIO ports
             PeripheralManager manager = PeripheralManager.getInstance();
-            mLedGpioRed = manager.openGpio(GPIO2);
-            mLedGpioGreen = manager.openGpio(GPIO3);
-            mLedGpioBlue = manager.openGpio(GPIO4);
+            mLedGpioRed1 = manager.openGpio(GPIO2);
+            mLedGpioGreen1 = manager.openGpio(GPIO3);
+            mLedGpioBlue1 = manager.openGpio(GPIO4);
 
             // Define outputs
-            mLedGpioRed.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
-            mLedGpioGreen.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
-            mLedGpioBlue.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
+            mLedGpioRed1.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
+            mLedGpioGreen1.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
+            mLedGpioBlue1.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
 
             // Assign initial states
-            mLedGpioRed.setActiveType(Gpio.ACTIVE_LOW);
-            mLedGpioGreen.setActiveType(Gpio.ACTIVE_LOW);
-            mLedGpioBlue.setActiveType(Gpio.ACTIVE_LOW);
+            mLedGpioRed1.setActiveType(Gpio.ACTIVE_LOW);
+            mLedGpioGreen1.setActiveType(Gpio.ACTIVE_LOW);
+            mLedGpioBlue1.setActiveType(Gpio.ACTIVE_LOW);
 
             // Init first state
             state = 1;
@@ -61,7 +61,7 @@ public class ExerciseOne{
     private Runnable mBlinkRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mLedGpioBlue == null || mLedGpioGreen == null || mLedGpioRed == null) {
+            if (mLedGpioBlue1 == null || mLedGpioGreen1 == null || mLedGpioRed1 == null) {
                 Log.w(TAG, "Stopping runnable since Gpio is null");
                 return;
             }
@@ -69,21 +69,21 @@ public class ExerciseOne{
                 // State Machine
                 switch (state) {
                     case 1:
-                        mLedGpioRed.setValue(true);
-                        mLedGpioGreen.setValue(false);
-                        mLedGpioBlue.setValue(false);
+                        mLedGpioRed1.setValue(true);
+                        mLedGpioGreen1.setValue(false);
+                        mLedGpioBlue1.setValue(false);
                         state = 2;
                         break;
                     case 2:
-                        mLedGpioRed.setValue(false);
-                        mLedGpioGreen.setValue(true);
-                        mLedGpioBlue.setValue(false);
+                        mLedGpioRed1.setValue(false);
+                        mLedGpioGreen1.setValue(true);
+                        mLedGpioBlue1.setValue(false);
                         state = 3;
                         break;
                     case 3:
-                        mLedGpioRed.setValue(false);
-                        mLedGpioGreen.setValue(false);
-                        mLedGpioBlue.setValue(true);
+                        mLedGpioRed1.setValue(false);
+                        mLedGpioGreen1.setValue(false);
+                        mLedGpioBlue1.setValue(true);
                         state = 1;
                         break;
                     default:
@@ -104,16 +104,16 @@ public class ExerciseOne{
         mHandler.removeCallbacks(mBlinkRunnable);
         // Close Gpio
         Log.i(TAG, "Closing LED GPIO pin");
-        if(mLedGpioRed != null && mLedGpioBlue != null && mLedGpioGreen != null) try {
-            mLedGpioGreen.close();
-            mLedGpioBlue.close();
-            mLedGpioRed.close();
+        if(mLedGpioRed1 != null || mLedGpioBlue1 != null || mLedGpioGreen1 != null) try {
+            mLedGpioGreen1.close();
+            mLedGpioBlue1.close();
+            mLedGpioRed1.close();
         } catch (IOException e) {
             Log.e(TAG, "Error on PeripheralIO API", e);
         } finally {
-            mLedGpioRed = null;
-            mLedGpioBlue = null;
-            mLedGpioGreen = null;
+            mLedGpioRed1 = null;
+            mLedGpioBlue1 = null;
+            mLedGpioGreen1 = null;
         }
     }
 }

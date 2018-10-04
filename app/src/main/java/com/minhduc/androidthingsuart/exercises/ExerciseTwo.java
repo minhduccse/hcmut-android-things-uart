@@ -10,10 +10,10 @@ import com.google.android.things.pio.PeripheralManager;
 import java.io.IOException;
 
 public class ExerciseTwo {
-    private static final String TAG = "LED & Button";
-    private String GPIO2 = "BCM17";
-    private String GPIO3 = "BCM27";
-    private String GPIO4 = "BCM22";
+    private static final String TAG = "EX2";
+    private String GPIO2 = "BCM2";
+    private String GPIO3 = "BCM3";
+    private String GPIO4 = "BCM4";
     private String GPIO20 = "BCM20";
 
 
@@ -156,20 +156,34 @@ public class ExerciseTwo {
     public void onDestroy() {
         // Remove pending blink Runnable
         mHandler.removeCallbacks(mBlinkRunnable);
-        mButtonGpio.unregisterGpioCallback(mGpioCallback);
+        if (mButtonGpio != null) {
+            mButtonGpio.unregisterGpioCallback(mGpioCallback);
+            try {
+                mButtonGpio.close();
+            } catch (IOException e) {
+                Log.e(TAG, "Error on PeripheralIO API", e);
+            } finally {
+                mButtonGpio = null;
+            }
+        }
         // Close the Gpio pin.
         Log.i(TAG, "Close LED GPIO");
-        if(mLedGpioRed != null && mLedGpioBlue != null && mLedGpioGreen != null && mButtonGpio != null) try {
+        if(mLedGpioRed != null || mLedGpioBlue != null || mLedGpioGreen != null) try {
             mLedGpioGreen.close();
             mLedGpioBlue.close();
             mLedGpioRed.close();
-            mButtonGpio.close();
         } catch (IOException e) {
             Log.e(TAG, "Error on PeripheralIO API", e);
         } finally {
             mLedGpioRed = null;
             mLedGpioBlue = null;
             mLedGpioGreen = null;
+        }
+        if(mButtonGpio != null) try {
+            mButtonGpio.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Error on Button IO", e);
+        } finally {
             mButtonGpio = null;
         }
     }

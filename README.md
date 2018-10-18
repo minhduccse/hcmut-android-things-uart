@@ -17,6 +17,8 @@ Implement an app that receives commands from UART and run functions as follows.
 | LED RED        |  BCM2|
 | LED GREEN      |  BCM3|
 | LED BLUE       |  BCM4|
+| COMMOM CATOT   |  GND|
+| COMMOM ANOT    |  5V|
 | BUTTON         |  BCM20|
 | PWM PIN        |  PWM0|
 |USB to TLL - RX |  BCM14 (TX)|
